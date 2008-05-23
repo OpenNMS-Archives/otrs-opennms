@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_package version="1.0">
+    <Name>OTRS-OpenNMSIntegration</Name>
+    <Version>0.0.1</Version>
+    <Framework>2.3.x</Framework>
+    <Vendor>The OpenNMS Project</Vendor>
+    <URL>http://www.opennms.org/</URL>
+    <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+    <ChangeLog Version="0.0.1" Date="2008-05-08 22:20:00">New package.</ChangeLog>
+    <Description Lang="en">OpenNMSIntegration Module.</Description>
+    <IntroInstallPre Title="Warning: interface liable to change" Lang="en">This code is a work in progress. The interface is liable to change without notice.</IntroInstallPre>
+    <BuildDate>?</BuildDate>
+    <BuildHost>?</BuildHost>
+    <Filelist>
+        <File Permission="755" Location="bin/cgi-bin/opennms.pl"></File>
+        <File Permission="644" Location="Kernel/System/WebService.pm"></File>
+        <File Permission="644" Location="Kernel/System/TicketService.pm"></File>
+        <File Permission="644" Location="var/httpd/htdocs/TicketService.wsdl"></File>
+    </Filelist>
+    <DatabaseInstall>
+    </DatabaseInstall>
+    <DatabaseReinstall>
+    </DatabaseReinstall>
+    <DatabaseUninstall>
+    </DatabaseUninstall>
+</otrs_package>
