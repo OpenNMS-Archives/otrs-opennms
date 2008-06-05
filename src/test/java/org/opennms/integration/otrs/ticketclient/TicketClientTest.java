@@ -130,79 +130,84 @@ public class TicketClientTest extends TestCase {
     	
     }
 
-	public void testNumericTicketCreate() {
-
-		TicketIDAndNumber idAndNumber = null;
-		Ticket retrievedTicket = null;
-		
-		try {
-			idAndNumber = port.ticketCreate(numericTicket, creds);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		assertNotNull(idAndNumber);
-		
-		try {
-			retrievedTicket = port.ticketGetByID(idAndNumber.getTicketID(),
-					creds);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-		// Compare all the fields to the defaults (should get out what we put in)
-		
-		assertEquals(defaultQueue, retrievedTicket.getQueue());
-		assertEquals(defaultQueueID, retrievedTicket.getQueueID());
-		assertEquals(defaultPriority, retrievedTicket.getPriority());
-		assertEquals(defaultPriorityID, retrievedTicket.getPriorityID());
-		assertEquals(defaultState, retrievedTicket.getState());
-		assertEquals(defaultStateID, retrievedTicket.getStateID());
-		assertEquals(defaultLock, retrievedTicket.getLock());
-		assertEquals(defaultLockID, retrievedTicket.getLockID());
-		assertEquals(defaultOwner, retrievedTicket.getOwner());
-		assertEquals(defaultOwnerID, retrievedTicket.getOwnerID());
-		assertEquals(defaultTitle, retrievedTicket.getTitle());
-		
-	}
-	
-	public void testTextualTicketCreate() {
-
-		TicketIDAndNumber idAndNumber = null;
-		Ticket retrievedTicket = null;
-		
-		try {
-			idAndNumber = port.ticketCreate(textualTicket, creds);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		assertNotNull(idAndNumber);
-	
-		try {
-			retrievedTicket = port.ticketGetByNumber(idAndNumber.getTicketNumber(),
-					creds);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-		// Compare all the fields to the defaults (should get out what we put in)
-		
-		assertEquals(defaultQueue, retrievedTicket.getQueue());
-		assertEquals(defaultQueueID, retrievedTicket.getQueueID());
-		assertEquals(defaultPriority, retrievedTicket.getPriority());
-		assertEquals(defaultPriorityID, retrievedTicket.getPriorityID());
-		assertEquals(defaultState, retrievedTicket.getState());
-		assertEquals(defaultStateID, retrievedTicket.getStateID());
-		assertEquals(defaultLock, retrievedTicket.getLock());
-		assertEquals(defaultLockID, retrievedTicket.getLockID());
-		assertEquals(defaultOwner, retrievedTicket.getOwner());
-		assertEquals(defaultOwnerID, retrievedTicket.getOwnerID());
-		assertEquals(defaultTitle, retrievedTicket.getTitle());
-
-	}
+/*
+ *  Commented the following tests out as they may be unsafe on a running OTRS instance.
+ *    - OTRS is unhappy about tickets created without articles
+ *
+ *	public void testNumericTicketCreate() {
+ *
+ *		TicketIDAndNumber idAndNumber = null;
+ *		Ticket retrievedTicket = null;
+ *		
+ *		try {
+ *			idAndNumber = port.ticketCreate(numericTicket, creds);
+ *		} catch (RemoteException e) {
+ *			// TODO Auto-generated catch block
+ *			e.printStackTrace();
+ *		}
+ *
+ *		assertNotNull(idAndNumber);
+ *		
+ *		try {
+ *			retrievedTicket = port.ticketGetByID(idAndNumber.getTicketID(),
+ *					creds);
+ *		} catch (RemoteException e) {
+ *			e.printStackTrace();
+ *		}
+ *
+ *		// Compare all the fields to the defaults (should get out what we put in)
+ *		
+ *		assertEquals(defaultQueue, retrievedTicket.getQueue());
+ *		assertEquals(defaultQueueID, retrievedTicket.getQueueID());
+ *		assertEquals(defaultPriority, retrievedTicket.getPriority());
+ * 		assertEquals(defaultPriorityID, retrievedTicket.getPriorityID());
+ *		assertEquals(defaultState, retrievedTicket.getState());
+ *		assertEquals(defaultStateID, retrievedTicket.getStateID());
+ *		assertEquals(defaultLock, retrievedTicket.getLock());
+ *		assertEquals(defaultLockID, retrievedTicket.getLockID());
+ *		assertEquals(defaultOwner, retrievedTicket.getOwner());
+ *		assertEquals(defaultOwnerID, retrievedTicket.getOwnerID());
+ *		assertEquals(defaultTitle, retrievedTicket.getTitle());
+ *		
+ *	}
+ *	
+ *	public void testTextualTicketCreate() {
+ *
+ *		TicketIDAndNumber idAndNumber = null;
+ *		Ticket retrievedTicket = null;
+ *		
+ *		try {
+ *			idAndNumber = port.ticketCreate(textualTicket, creds);
+ *		} catch (RemoteException e) {
+ *			// TODO Auto-generated catch block
+ *			e.printStackTrace();
+ *		}
+ *
+ *		assertNotNull(idAndNumber);
+ *	
+ *		try {
+ *			retrievedTicket = port.ticketGetByNumber(idAndNumber.getTicketNumber(),
+ *					creds);
+ *		} catch (RemoteException e) {
+ *			e.printStackTrace();
+ *		}
+ *
+ *		// Compare all the fields to the defaults (should get out what we put in)
+ *		
+ *		assertEquals(defaultQueue, retrievedTicket.getQueue());
+ *		assertEquals(defaultQueueID, retrievedTicket.getQueueID());
+ *		assertEquals(defaultPriority, retrievedTicket.getPriority());
+ *		assertEquals(defaultPriorityID, retrievedTicket.getPriorityID());
+ *		assertEquals(defaultState, retrievedTicket.getState());
+ *		assertEquals(defaultStateID, retrievedTicket.getStateID());
+ *		assertEquals(defaultLock, retrievedTicket.getLock());
+ *		assertEquals(defaultLockID, retrievedTicket.getLockID());
+ *		assertEquals(defaultOwner, retrievedTicket.getOwner());
+ *		assertEquals(defaultOwnerID, retrievedTicket.getOwnerID());
+ *		assertEquals(defaultTitle, retrievedTicket.getTitle());
+ *
+ *	}
+ */
 	
 	public void testArticle() {
 		
