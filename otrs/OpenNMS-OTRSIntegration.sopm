@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
-    <Name>OTRS-OpenNMSIntegration</Name>
+    <Name>otrs-opennms</Name>
     <Version>0.0.1</Version>
     <Framework>2.3.x</Framework>
     <Vendor>The OpenNMS Project</Vendor>

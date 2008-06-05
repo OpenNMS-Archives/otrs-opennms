@@ -216,6 +216,20 @@
 	<message name="TicketCreateResponse">
 		<part name="ticketIDAndNumber" type="tns:TicketIDAndNumber" />
 	</message>
+	
+	<message name="TicketStateIDSetRequest">
+		<part name="ticketNumber" type="xsd:long" />
+		<part name="stateID" type="xsd:int" />
+		<part name="userID" type="xsd:int" />
+		<part name="request_header" type="tns:Credentials" />
+	</message>
+	
+	<message name="TicketStateSetRequest">
+		<part name="ticketNumber" type="xsd:long" />
+		<part name="state" type="xsd:string" />
+		<part name="userID" type="xsd:int" />
+		<part name="request_header" type="tns:Credentials" />
+	</message>
 
 	<message name="ArticleGetByIDRequest">
 		<part name="articleID" type="xsd:int" />
@@ -268,6 +282,14 @@
 		<operation name="TicketCreate">
 			<input message="tns:TicketCreateRequest" />
 			<output message="tns:TicketCreateResponse" />
+		</operation>
+		
+		<operation name="TicketStateIDSet">
+			<input message="tns:TicketStateIDSetRequest" />
+		</operation>
+		
+		<operation name="TicketStateSet">
+			<input message="tns:TicketStateSetRequest" />
 		</operation>
 
 		<operation name="ArticleCreate">
@@ -348,6 +370,32 @@
 					namespace="http://opennms.org/integration/otrs/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</output>
+		</operation>
+		<operation name="TicketStateIDSet">
+			<soap:operation
+				soapAction="http://opennms.org/integration/otrs/ticketservice#TicketStateIDSet" />
+			<input>
+				<soap:body use="encoded"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+				<soap:header use="encoded" part="request_header"
+					message="tns:TicketStateIDSetRequest"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+		</operation>
+		<operation name="TicketStateSet">
+			<soap:operation
+				soapAction="http://opennms.org/integration/otrs/ticketservice#TicketStateSet" />
+			<input>
+				<soap:body use="encoded"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+				<soap:header use="encoded" part="request_header"
+					message="tns:TicketStateSetRequest"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
 		</operation>
 		<operation name="ArticleCreate">
 			<soap:operation
