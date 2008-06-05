@@ -186,10 +186,10 @@ sub TicketStateSet() {
 	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $TicketStateSetReq->{TicketID})) {
 		$Self->{CommonObject}->{LogObject}->Log(
 			Priority => 'error',
-			Message => "No such ticket: $ArticleReq->{TicketID}");
+			Message => "No such ticket: $TicketStateSetReq->{TicketID}");
     	die SOAP::Fault
        		->faultcode('Server.RequestError')
-        	->faultstring("No such ticket: $ArticleReq->{TicketID}");
+        	->faultstring("No such ticket: $TicketStateSetReq->{TicketID}");
 	}
     
 	$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketStateSetReq->{TicketID},
@@ -203,22 +203,22 @@ sub TicketStateSet() {
 sub TicketStateIDSet() {
 
 	my $Self = shift->new(@_);
-	my $TicketStateSetReq = shift();
+	my $TicketStateIDSetReq = shift();
 		
 	# Better have a TicketID - check that first
 	
-	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $TicketStateSetReq->{TicketID})) {
+	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $TicketStateIDSetReq->{TicketID})) {
 		$Self->{CommonObject}->{LogObject}->Log(
 			Priority => 'error',
-			Message => "No such ticket: $ArticleReq->{TicketID}");
+			Message => "No such ticket: $TicketStateIDSetReq->{TicketID}");
     	die SOAP::Fault
        		->faultcode('Server.RequestError')
-        	->faultstring("No such ticket: $ArticleReq->{TicketID}");
+        	->faultstring("No such ticket: $TicketStateIDSetReq->{TicketID}");
 	}
     
-	$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketStateSetReq->{TicketID},
-													UserID => $TicketStateSetReq->{UserID},
-													State => $TicketStateSetReq->{StateID});
+	$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketStateIDSetReq->{TicketID},
+													UserID => $TicketStateIDSetReq->{UserID},
+													State => $TicketStateIDSetReq->{StateID});
 													
 	return;
     

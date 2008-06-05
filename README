@@ -1,0 +1,45 @@
+Building the OTRS package
+=========================
+
+1. Use opm.pl to create the package, thus:
+
+[otrs home]/bin/opm.pl -a build -p /path/to/OpenNMS-OTRSIntegration.sopm -d /path/to/
+
+for me, with otrs in /Users/user/Documents/otrs/otrs and the otrs-opennms code checked out to /Users/user/Documents/otrs/otrs-opennms:
+
+jsartin-mac:~ user$ /Users/user/Documents/otrs/otrs/bin/opm.pl -a build -p /Users/user/Documents/otrs/otrs-opennms/otrs/OpenNMS-OTRSIntegration.sopm -d /Users/user/Documents/otrs/otrs-opennms/otrs/
+Writing /tmp/otrs-opennms-0.0.1.opm
+jsartin-mac:~ user$ 
+
+Add the package to otrs
+=======================
+
+1. At the webUI for OTRS, go to Admin->Package Manager.
+2. Add the package (/tmp/otrs-opennms-0.0.1.opm).
+3. Hit "continue" at the dire warning page.
+
+Add the SOAP user to OTRS
+=========================
+
+1. At the webUI for OTRS, go to Admin->SysConfig.
+2. Show the Group for "Framework".
+3. Select Core::SOAP
+4. Set the SOAP::User and SOAP::Password (the sample java code expects opennms/opennms). The opennms package uses the same authentication technique as the existing SOAP handle.
+
+Check that you have the required Perl Modules installed
+=======================================================
+
+Ensure you have the SOAP::Lite, and SOAP::DateTime CPAN modules installed. If you have used the existing OTRS SOAP handle, you will probably already have SOAP::Lite.
+
+Compile the Java and run the tests
+==================================
+
+You'll need maven for this. At the root of the otrs-opennms package that you downloaded from the OpenNMS repo, run:
+
+jsartin-mac:~/Documents/otrs/otrs-opennms user$ mvn test
+
+This will compile the code and run the tests (there are 7 of them). The tests expect to see your OTRS server at http://localhost/otrs/. You should now see some tickets in your otrs raw queue.
+
+Hope that this has been of some use to you.
+
+Jonathan Sartin (jonathan@opennms.org)
