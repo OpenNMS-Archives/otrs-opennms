@@ -10,7 +10,7 @@ import org.apache.axis.AxisFault;
 
 public class TicketClientTest extends TestCase {
 
-	private Credentials creds = new Credentials("user1","pass1");
+	private Credentials creds = new Credentials("opennms","opennms");
 	private TicketServicePort_PortType port;
 	private TicketServiceLocator service;
 	private TicketCore numericTicket;
@@ -107,7 +107,7 @@ public class TicketClientTest extends TestCase {
 	public void testBadUserTicketCreate() {
 
 		try {
-			port.ticketCreate(numericTicket, new Credentials("user2", ""));
+			port.ticketCreate(numericTicket, new Credentials("opennms", ""));
 			fail("Axisfault expected");
 		} catch (AxisFault af) {
 			assertEquals("Authentication Failure", af.getFaultString());
@@ -120,7 +120,7 @@ public class TicketClientTest extends TestCase {
 	public void testBadPassTicketCreate() {
     	
     	try{
-    		port.ticketCreate(numericTicket, new Credentials("user1","badpass"));
+    		port.ticketCreate(numericTicket, new Credentials("opennms","badpass"));
     		fail("SOAPfault expected");
     	} catch( AxisFault af ) {
   		      assertEquals("Authentication Failure",  af.getFaultString() );
