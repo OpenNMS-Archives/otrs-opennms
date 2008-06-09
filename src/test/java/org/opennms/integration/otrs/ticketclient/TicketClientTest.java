@@ -345,5 +345,81 @@ public class TicketClientTest extends TestCase {
 		}
 	}
 	
+	
+public void testGetByNumber() throws InterruptedException {
+		
+		TicketIDAndNumber idAndNumber = null;
+		TicketWithArticles ticketWithArticles = null;
+		
+		Integer articleID1 = null;
+		Integer articleID2 = null;
+		String	articleBody1 = new String("First article in getByNumber");
+		String	articleBody2 = new String("Second article in getByNumer");
+		Article [] articlesByTicketNumber = null;
+		Article [] articlesByTicketID = null;
+		
+		try {
+			idAndNumber = port.ticketCreate(textualTicket, creds);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		defaultArticle.setTicketID(idAndNumber.getTicketID());
+		defaultArticle.setBody(articleBody1);
+		
+		try {
+			articleID1 = port.articleCreate(defaultArticle, creds);
+			assertNotNull(articleID1);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		defaultArticle.setBody(articleBody2);
+		
+		// Sleep for a second to stop local tests failing on slow local database
+		
+		Thread.sleep(1000);
+		
+		try {
+			articleID2 = port.articleCreate(defaultArticle, creds);
+			assertNotNull(articleID2);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Now get the whole lot:
+		
+		try {
+			ticketWithArticles = port.getByNumber(idAndNumber.getTicketNumber(), creds);
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		// Check the title is what I put in.
+		
+		assertEquals(textualTicket.getTitle(),ticketWithArticles.getTicket().getTitle());
+	
+		
+		for (Article article : ticketWithArticles.getArticles()) {
+			
+			assertEquals(defaultArticleFrom,article.getFrom());
+			assertEquals(defaultArticleSenderType,article.getSenderType());
+			assertEquals(defaultArticleSubject,article.getSubject());
+			assertEquals(defaultArticleContentType,article.getContentType());
+			
+			if (article.getArticleID().equals(articleID1) ) {
+				assertEquals(articleBody1,article.getBody());
+			} else if (article.getArticleID().equals(articleID2) ) {
+				assertEquals(articleBody2,article.getBody());
+			} else {
+				fail("unexpected article id in returned array by ID: " + article.getArticleID().toString() );
+			}
+		}
+		
+	}
 
 }

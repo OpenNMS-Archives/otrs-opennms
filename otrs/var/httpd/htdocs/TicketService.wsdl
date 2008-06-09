@@ -190,6 +190,14 @@
 						minOccurs="1" />
 				</xsd:all>
 			</xsd:complexType>
+			
+			<xsd:complexType name="TicketWithArticles">
+				<xsd:sequence>
+					<xsd:element name="Ticket" type="tns:Ticket" />
+					<xsd:element name="Articles" type="tns:ArrayOfArticle" />
+				</xsd:sequence>
+			</xsd:complexType>
+			
 		</xsd:schema>
 	</types>
 
@@ -206,6 +214,20 @@
 
 	<message name="TicketGetResponse">
 		<part name="return" type="tns:Ticket" />
+	</message>
+	
+	<message name="GetByNumberRequest">
+		<part name="ticketNumber" type="xsd:long" />
+		<part name="request_header" type="tns:Credentials" />
+	</message>
+	
+	<message name="GetByIDRequest">
+		<part name="ticketID" type="xsd:int" />
+		<part name="request_header" type="tns:Credentials" />
+	</message>
+	
+	<message name="GetResponse">
+		<part name="ticketWitArticles" type="tns:TicketWithArticles" />
 	</message>
 
 	<message name="TicketCreateRequest">
@@ -278,7 +300,17 @@
 			<input message="tns:TicketGetByNumberRequest" />
 			<output message="tns:TicketGetResponse" />
 		</operation>
-
+		
+		<operation name="GetById">
+			<input message="tns:GetByNumberRequest" />
+			<output message="tns:GetResponse" />
+		</operation>
+		
+		<operation name="GetByNumber">
+			<input message="tns:GetByNumberRequest" />
+			<output message="tns:GetResponse" />
+		</operation>
+		
 		<operation name="TicketCreate">
 			<input message="tns:TicketCreateRequest" />
 			<output message="tns:TicketCreateResponse" />
@@ -344,6 +376,42 @@
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 				<soap:header use="encoded" part="request_header"
 					message="tns:TicketGetByNumberRequest"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+		<operation name="GetById">
+			<soap:operation
+				soapAction="http://opennms.org/integration/otrs/ticketservice#GetById" />
+			<input>
+				<soap:body use="encoded"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+				<soap:header use="encoded" part="request_header"
+					message="tns:GetByIdRequest"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+		<operation name="GetByNumber">
+			<soap:operation
+				soapAction="http://opennms.org/integration/otrs/ticketservice#GetByNumber" />
+			<input>
+				<soap:body use="encoded"
+					namespace="http://opennms.org/integration/otrs/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+				<soap:header use="encoded" part="request_header"
+					message="tns:GetByNumberRequest"
 					namespace="http://opennms.org/integration/otrs/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</input>

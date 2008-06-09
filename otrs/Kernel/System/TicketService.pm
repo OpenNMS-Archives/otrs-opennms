@@ -118,6 +118,59 @@ sub TicketGetByNumber() {
     
 }
 
+sub GetById() {
+	
+	my $Self = shift->new(@_);
+	my $TicketID = shift();
+		
+    my $Ticket =  $Self->TicketGetByID($TicketID);
+    my $Articles =  $Self->ArticleGetAllByTicketID($TicketID);
+    
+    my @GetByIdResponse = 
+	(
+		SOAP::Data->value($Ticket),
+		SOAP::Data->value($Articles)
+ 	);
+ 	
+    return SOAP::Data->name( "ticketWithArticles" )
+			->attr( {"xmlns:tns" => URI } )
+			->type( "tns:TicketWithArticles" )
+			->value( \SOAP::Data->value(@GetByIdResponse) );
+	
+}
+
+sub GetByNumber() {
+	
+	my $Self = shift->new(@_);
+	my $TicketNumber = shift();
+		
+	my $TicketID = $Self->{CommonObject}->{TicketObject}->TicketIDLookup(TicketNumber => $TicketNumber);
+    
+    unless ($TicketID) {
+		$Self->{CommonObject}->{LogObject}->Log( Priority => 'error', 
+			Message => "No TicketID for TicketNumber $TicketNumber" );
+       	die SOAP::Fault
+       		->faultcode('Server.RequestError')
+        	->faultstring("No TicketID for TicketNumber $TicketNumber");
+	};
+    
+    my $Ticket =  $Self->TicketGetByID($TicketID);
+    my $Articles =  $Self->ArticleGetAllByTicketID($TicketID);
+    
+    my @GetByNumberResponse = 
+	(
+		SOAP::Data->value($Ticket),
+		SOAP::Data->value($Articles)
+ 	);
+ 	
+    return SOAP::Data->name( "ticketWithArticles" )
+			->attr( {"xmlns:tns" => URI } )
+			->type( "tns:TicketWithArticles" )
+			->value( \SOAP::Data->value(@GetByNumberResponse) );
+	
+}
+
+
 sub TicketCreate() {
 	
 	my $Self = shift->new(@_);
