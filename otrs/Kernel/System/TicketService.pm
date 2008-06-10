@@ -192,7 +192,7 @@ sub TicketCreate() {
 		}
     }
     
-    my @RequiredField = ('UserID', 'Title', 'OwnerID');
+    my @RequiredField = ('Title', 'OwnerID');
     
     foreach (@RequiredField) {
 		if ( $TicketReq->{$_} ) {
@@ -203,6 +203,18 @@ sub TicketCreate() {
        			->faultstring("Require $_ ");
 		}
     }
+    
+    # Need UserID or User, but have to look up UserID if given User.
+    
+    if ( $TicketReq->{UserID} ) {
+			$Ticket{UserID} = $TicketReq->{UserID};
+		} elsif ($TicketReq->{User}) {
+			$Ticket{UserID} = $Self->GetUserIDForUser( \$TicketReq->{User} );
+		} else {
+			die SOAP::Fault
+       			->faultcode('Server.RequestError')
+       			->faultstring('Require UserID or User');
+	}
 	
 
 	my $TicketID = $Self->{CommonObject}->{TicketObject}->TicketCreate(%Ticket);
@@ -229,52 +241,81 @@ sub TicketCreate() {
 
 }
 
-sub TicketStateSet() {
+sub TicketStateUpdate() {
 
 	my $Self = shift->new(@_);
-	my $TicketStateSetReq = shift();
+	my $TicketStateUpdateReq = shift();
+	my $UserID;
+	my $TicketID;
 		
-	# Better have a TicketID - check that first
+	# Need TicketID or TicketNumber, make sure we've got one or the other. 
+	# Look up the TicketID from the TicketNumber if that's what was presented.
 	
-	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $TicketStateSetReq->{TicketID})) {
+	if ($TicketStateUpdateReq->{TicketNumber}) {
+		$TicketID = $Self->{CommonObject}->{TicketObject}->TicketIDLookup(TicketNumber => $TicketStateUpdateReq->{TicketNumber});
+	} elsif ($TicketStateUpdateReq->{TicketID}) {
+		$TicketID = $TicketStateUpdateReq->{TicketID};
+	} else {
 		$Self->{CommonObject}->{LogObject}->Log(
 			Priority => 'error',
-			Message => "No such ticket: $TicketStateSetReq->{TicketID}");
-    	die SOAP::Fault
+			Message => "Require TicketID or TicketNumber");
+		die SOAP::Fault
        		->faultcode('Server.RequestError')
-        	->faultstring("No such ticket: $TicketStateSetReq->{TicketID}");
-	}
-    
-	$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketStateSetReq->{TicketID},
-													UserID => $TicketStateSetReq->{UserID},
-													State => $TicketStateSetReq->{State});
-													
-	return;
-    
-}
-
-sub TicketStateIDSet() {
-
-	my $Self = shift->new(@_);
-	my $TicketStateIDSetReq = shift();
-		
-	# Better have a TicketID - check that first
+        	->faultstring("Require TicketID or TicketNumber");
+	};
 	
-	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $TicketStateIDSetReq->{TicketID})) {
+	# Check the TicketID is valid
+	
+	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $TicketID)) {
 		$Self->{CommonObject}->{LogObject}->Log(
 			Priority => 'error',
-			Message => "No such ticket: $TicketStateIDSetReq->{TicketID}");
+			Message => "No such ticket: $TicketID");
     	die SOAP::Fault
        		->faultcode('Server.RequestError')
-        	->faultstring("No such ticket: $TicketStateIDSetReq->{TicketID}");
+        	->faultstring("No such ticket: $TicketID");
 	}
+	
+	# Need UserID or User, but have to look up UserID if given User.
+	
+	if ( $TicketStateUpdateReq->{UserID} ) {
+			$UserID = $TicketStateUpdateReq->{UserID};
+		} elsif ($TicketStateUpdateReq->{User}) {
+			$UserID = $Self->GetUserIDForUser( \$TicketStateUpdateReq->{User});
+		} else {
+			$Self->{CommonObject}->{LogObject}->Log(
+				Priority => 'error',
+				Message => "Require UserID or User");
+			die SOAP::Fault
+       			->faultcode('Server.RequestError')
+       			->faultstring('Require UserID or User');
+	}
+	
+	# Update, using ticketID and UserID with State or StatID depending on
+	# which was offered in the request.
     
-	$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketStateIDSetReq->{TicketID},
-													UserID => $TicketStateIDSetReq->{UserID},
-													State => $TicketStateIDSetReq->{StateID});
-													
-	return;
-    
+    if ( $TicketStateUpdateReq->{State} ) {
+		$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketID,
+												UserID => $UserID,
+												State => $TicketStateUpdateReq->{State});
+		$Self->{CommonObject}->{LogObject}->Log(
+				Priority => 'error',
+				Message => "UPDATED STATE");
+    	} elsif  ( $TicketStateUpdateReq->{StateID} ) {
+    		$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketID,
+													UserID => $UserID,
+													StateID => $TicketStateUpdateReq->{StateID});
+			$Self->{CommonObject}->{LogObject}->Log(
+				Priority => 'error',
+				Message => "UPDATED STATEID");
+    	} else {
+    		$Self->{CommonObject}->{LogObject}->Log(
+				Priority => 'error',
+				Message => "Require StateID or State");
+    		die SOAP::Fault
+       			->faultcode('Server.RequestError')
+       			->faultstring('Require StateID or State');
+    		
+    	}
 }
 
 sub ArticleCreate() {
@@ -314,7 +355,7 @@ sub ArticleCreate() {
     
     # Need From Subject Body ContentType HistoryType HistoryComment
     
-    my @RequiredField = ('UserID', 'TicketID', 'From', 'Subject', 'Body', 
+    my @RequiredField = ('TicketID', 'From', 'Subject', 'Body', 
     					 'ContentType', 'HistoryType', 'HistoryComment');
     
     foreach (@RequiredField) {
@@ -326,6 +367,18 @@ sub ArticleCreate() {
        			->faultstring("Require $_ ");
 		}
     }
+    
+    # Need UserID or User, but have to look up UserID if given User.
+    
+    if ( $ArticleReq->{UserID} ) {
+			$Article{UserID} = $ArticleReq->{UserID};
+		} elsif ($ArticleReq->{User}) {
+			$Article{UserID} = $Self->GetUserIDForUser( \$ArticleReq->{User});
+		} else {
+			die SOAP::Fault
+       			->faultcode('Server.RequestError')
+       			->faultstring('Require UserID or User');
+	}
     
     my $ArticleID =  $Self->{CommonObject}->{TicketObject}->ArticleCreate(%Article);
     
@@ -478,6 +531,30 @@ sub FormatTypedArray
   return SOAP::Data->name( $name )
                    ->attr( $attr )
                    ->value( $formatted_array );
+}
+
+sub GetUserIDForUser(){
+
+	my $Self = shift;
+	my $User = shift();
+	my $UserID;
+	
+	print STDERR Dumper($User);
+	
+	$UserID = $Self->{CommonObject}->{UserObject}->UserLookup( UserLogin => ${$User} );
+
+	print STDERR Dumper($UserID);
+
+	unless ($UserID) {
+		$Self->{CommonObject}->{LogObject}->Log(
+			Priority => 'error',
+			Message => "no UserID for ${$User}");
+		die SOAP::Fault
+       			->faultcode('Server.RequestError')
+       			->faultstring("no UserID for ${$User}");
+	};
+
+    return $UserID;
 }
 
 1;

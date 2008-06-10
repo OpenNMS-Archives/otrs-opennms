@@ -29,6 +29,7 @@ public class TicketClientTest extends TestCase {
 	private String defaultState = new String("new");
 	private Integer defaultOwnerID = new Integer(1);
 	private String defaultOwner = new String("root@localhost");
+	private String defaultUser = new String("root@localhost");
 	private Integer defaultUserID = new Integer(1);
 	private String defaultTitle = new String("OpenNMS Integration Test");
 	
@@ -74,7 +75,7 @@ public class TicketClientTest extends TestCase {
 		textualTicket.setPriority(defaultPriority);
 		textualTicket.setState(defaultState);
 		textualTicket.setOwnerID(defaultOwnerID);
-		textualTicket.setUserID(defaultUserID);
+		textualTicket.setUser(defaultUser);
 		textualTicket.setTitle(defaultTitle);
 		
 		defaultArticle = new ArticleCore();
@@ -87,7 +88,7 @@ public class TicketClientTest extends TestCase {
 		defaultArticle.setContentType(defaultArticleContentType);
 		defaultArticle.setHistoryComment(defaultArticleHistoryComment);
 		defaultArticle.setHistoryType(defaultArticleHistoryType);
-		defaultArticle.setUserID(defaultUserID);
+		defaultArticle.setUser(defaultUser);
 		
 	}
 
@@ -421,5 +422,79 @@ public void testGetByNumber() throws InterruptedException {
 		}
 		
 	}
+
+public void testTicketStateUpdate() throws InterruptedException {
+	
+	long ticketNumber = createTicketAndArticle("testTicketStateUpdate Subject", 
+								"testRicketStateUpdate Body");
+	
+	TicketWithArticles openTicket = null;
+	TicketWithArticles closedTicket = null;
+	
+	try {
+		openTicket = port.getByNumber(ticketNumber, creds);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	assertEquals("new",openTicket.getTicket().getState());
+	
+	TicketStateUpdate stateUpdate = new TicketStateUpdate();
+	
+	stateUpdate.setState("closed successful");
+	stateUpdate.setTicketNumber(ticketNumber);
+	stateUpdate.setUser("root@localhost");
+	
+	try {
+		port.ticketStateUpdate(stateUpdate, creds);
+	} catch (RemoteException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	
+	
+	Thread.sleep(1000);
+	
+	try {
+		closedTicket = port.getByNumber(ticketNumber, creds);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	assertEquals("closed successful",closedTicket.getTicket().getState());
+	
+}
+
+private long createTicketAndArticle(String ticketSubject, String articleBody) throws InterruptedException {
+	
+	TicketIDAndNumber idAndNumber = null;
+	
+	Integer articleID1 = null;
+	String	articleBody1 = new String("First article in getByNumber");
+	
+	try {
+		idAndNumber = port.ticketCreate(textualTicket, creds);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	defaultArticle.setTicketID(idAndNumber.getTicketID());
+	defaultArticle.setBody(articleBody1);
+
+	
+	try {
+		articleID1 = port.articleCreate(defaultArticle, creds);
+		assertNotNull(articleID1);
+	} catch (RemoteException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return idAndNumber.getTicketNumber();
+	
+}
 
 }

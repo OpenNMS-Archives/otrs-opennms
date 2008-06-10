@@ -19,7 +19,10 @@
 			<xsd:complexType name="TicketCore">
 				<xsd:sequence>
 					<xsd:element name="Title" type="xsd:string" />
-					<xsd:element name="UserID" type="xsd:int" />
+					<xsd:choice>
+						<xsd:element name="User" type="xsd:string" />
+						<xsd:element name="UserID" type="xsd:int" />
+					</xsd:choice>
 					<xsd:choice>
 						<xsd:element name="State" type="xsd:string" />
 						<xsd:element name="StateID" type="xsd:int" />
@@ -134,7 +137,10 @@
 					<xsd:element name="HistoryComment"
 						type="xsd:string" />
 					<xsd:element name="Body" type="xsd:string" />
-					<xsd:element name="UserID" type="xsd:int" />
+					<xsd:choice>
+						<xsd:element name="UserID" type="xsd:int" />
+						<xsd:element name="User" type="xsd:string" />
+					</xsd:choice>
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="Article">
@@ -173,6 +179,7 @@
 						minOccurs="0" />
 				</xsd:all>
 			</xsd:complexType>
+			
 			<xsd:complexType name="ArrayOfArticle">
 				<xsd:complexContent>
 					<xsd:restriction base="soap-enc:Array">
@@ -189,6 +196,23 @@
 					<xsd:element name="Pass" type="xsd:string"
 						minOccurs="1" />
 				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="TicketStateUpdate">
+				<xsd:sequence>
+					<xsd:choice>
+						<xsd:element name="User" type="xsd:string" />
+						<xsd:element name="UserID" type="xsd:int" />
+					</xsd:choice>
+					<xsd:choice>
+						<xsd:element name="TicketID" type="xsd:int" />
+						<xsd:element name="TicketNumber" type="xsd:long" />
+					</xsd:choice>
+					<xsd:choice>
+						<xsd:element name="State" type="xsd:string" />
+						<xsd:element name="StateID" type="xsd:int" />
+					</xsd:choice>
+				</xsd:sequence>
 			</xsd:complexType>
 			
 			<xsd:complexType name="TicketWithArticles">
@@ -239,20 +263,11 @@
 		<part name="ticketIDAndNumber" type="tns:TicketIDAndNumber" />
 	</message>
 	
-	<message name="TicketStateIDSetRequest">
-		<part name="ticketNumber" type="xsd:long" />
-		<part name="stateID" type="xsd:int" />
-		<part name="userID" type="xsd:int" />
+	<message name="TicketStateUpdateRequest">
+		<part name="ticketStateUpdate" type="tns:TicketStateUpdate" />
 		<part name="request_header" type="tns:Credentials" />
 	</message>
 	
-	<message name="TicketStateSetRequest">
-		<part name="ticketNumber" type="xsd:long" />
-		<part name="state" type="xsd:string" />
-		<part name="userID" type="xsd:int" />
-		<part name="request_header" type="tns:Credentials" />
-	</message>
-
 	<message name="ArticleGetByIDRequest">
 		<part name="articleID" type="xsd:int" />
 		<part name="request_header" type="tns:Credentials" />
@@ -316,12 +331,8 @@
 			<output message="tns:TicketCreateResponse" />
 		</operation>
 		
-		<operation name="TicketStateIDSet">
-			<input message="tns:TicketStateIDSetRequest" />
-		</operation>
-		
-		<operation name="TicketStateSet">
-			<input message="tns:TicketStateSetRequest" />
+		<operation name="TicketStateUpdate">
+			<input message="tns:TicketStateUpdateRequest" />
 		</operation>
 
 		<operation name="ArticleCreate">
@@ -439,28 +450,15 @@
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</output>
 		</operation>
-		<operation name="TicketStateIDSet">
+		<operation name="TicketStateUpdate">
 			<soap:operation
-				soapAction="http://opennms.org/integration/otrs/ticketservice#TicketStateIDSet" />
+				soapAction="http://opennms.org/integration/otrs/ticketservice#TicketStateUpdate" />
 			<input>
 				<soap:body use="encoded"
 					namespace="http://opennms.org/integration/otrs/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 				<soap:header use="encoded" part="request_header"
-					message="tns:TicketStateIDSetRequest"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
-			</input>
-		</operation>
-		<operation name="TicketStateSet">
-			<soap:operation
-				soapAction="http://opennms.org/integration/otrs/ticketservice#TicketStateSet" />
-			<input>
-				<soap:body use="encoded"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
-					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
-				<soap:header use="encoded" part="request_header"
-					message="tns:TicketStateSetRequest"
+					message="tns:TicketStateUpdateRequest"
 					namespace="http://opennms.org/integration/otrs/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</input>
