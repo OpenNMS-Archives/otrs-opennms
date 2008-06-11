@@ -323,17 +323,33 @@ sub ArticleCreate() {
 	my $Self = shift->new(@_);
 	my $ArticleReq = shift;
 	my %Article;
+	my $TicketID;
 	
 	# Better have a TicketID - check that first
 	
-	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $ArticleReq->{TicketID})) {
+	if ($ArticleReq->{TicketNumber}) {
+		$TicketID = $Self->{CommonObject}->{TicketObject}->TicketIDLookup(TicketNumber => $ArticleReq->{TicketNumber});
+	} elsif ($ArticleReq->{TicketID}) {
+		$TicketID = $ArticleReq->{TicketID};
+	} else {
 		$Self->{CommonObject}->{LogObject}->Log(
 			Priority => 'error',
-			Message => "No such ticket: $ArticleReq->{TicketID}");
+			Message => "Require TicketID or TicketNumber");
+		die SOAP::Fault
+       		->faultcode('Server.RequestError')
+        	->faultstring("Require TicketID or TicketNumber");
+	};
+	
+	unless ($Self->{CommonObject}->{TicketObject}->TicketGet(TicketID => $TicketID)) {
+		$Self->{CommonObject}->{LogObject}->Log(
+			Priority => 'error',
+			Message => "No such ticket: $TicketID");
     	die SOAP::Fault
        		->faultcode('Server.RequestError')
-        	->faultstring("No such ticket: $ArticleReq->{TicketID}");
+        	->faultstring("No such ticket: $TicketID");
 	}
+	
+	$Article{TicketID} = $TicketID;
 	
 	
 	# (Need ArticleType or ArticleTypeID) and (SenderType or SenderTypeID)
@@ -355,7 +371,7 @@ sub ArticleCreate() {
     
     # Need From Subject Body ContentType HistoryType HistoryComment
     
-    my @RequiredField = ('TicketID', 'From', 'Subject', 'Body', 
+    my @RequiredField = ('From', 'Subject', 'Body', 
     					 'ContentType', 'HistoryType', 'HistoryComment');
     
     foreach (@RequiredField) {

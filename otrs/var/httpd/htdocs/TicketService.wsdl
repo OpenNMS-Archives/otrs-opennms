@@ -118,7 +118,10 @@
 			</xsd:complexType>
 			<xsd:complexType name="ArticleCore">
 				<xsd:sequence>
-					<xsd:element name="TicketID" type="xsd:int" />
+					<xsd:choice>
+						<xsd:element name="TicketID" type="xsd:int" />
+						<xsd:element name="TicketNumber" type="xsd:long" />
+					</xsd:choice>
 					<xsd:choice>
 						<xsd:element name="ArticleTypeID"
 							type="xsd:int" />
