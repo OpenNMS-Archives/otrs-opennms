@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
-    <Name>otrs-opennms</Name>
-    <Version>0.0.1</Version>
+    <Name>OpenNMS</Name>
+    <Version>0.1.0</Version>
     <Framework>2.3.x</Framework>
     <Vendor>The OpenNMS Project</Vendor>
     <URL>http://www.opennms.org/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
     <ChangeLog Version="0.0.1" Date="2008-05-08 22:20:00">New package.</ChangeLog>
-    <Description Lang="en">OpenNMSIntegration Module.</Description>
+    <ChangeLog Version="0.1.0" Date="2008-07-29 17:00:00">debug code removed, license updated.</ChangeLog>
+    <Description Lang="en">OpenNMS Integration Module.</Description>
     <IntroInstallPre Title="Warning: interface liable to change" Lang="en">This code is a work in progress. The interface is liable to change without notice.</IntroInstallPre>
     <BuildDate>?</BuildDate>
-    <BuildHost>?</BuildHost>
+    <BuildHost>jsartin-mac</BuildHost>
     <Filelist>
         <File Permission="755" Location="bin/cgi-bin/opennms.pl"></File>
         <File Permission="644" Location="Kernel/System/WebService.pm"></File>
