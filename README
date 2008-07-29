@@ -3,19 +3,20 @@ Building the OTRS package
 
 1. Use opm.pl to create the package, thus:
 
-[otrs home]/bin/opm.pl -a build -p /path/to/OpenNMS-OTRSIntegration.sopm -d /path/to/
+[otrs home]/bin/opm.pl -a build -p /path/to/OpenNMS.sopm -d /path/to/
 
-for me, with otrs in /Users/user/Documents/otrs/otrs and the otrs-opennms code checked out to /Users/user/Documents/otrs/otrs-opennms:
+for me, with otrs in /Users/user/Documents/otrs/otrs and the otrs-opennms code checked out to /Users/user/svn/otrs-opennms:
 
-jsartin-mac:~ user$ /Users/user/Documents/otrs/otrs/bin/opm.pl -a build -p /Users/user/Documents/otrs/otrs-opennms/otrs/OpenNMS-OTRSIntegration.sopm -d /Users/user/Documents/otrs/otrs-opennms/otrs/
-Writing /tmp/otrs-opennms-0.0.1.opm
-jsartin-mac:~ user$ 
+jsartin-mac:~ user$ /Users/user/Documents/otrs/otrs/bin/opm.pl -a build -p /Users/user/svn/otrs-opennms/otrs/OpenNMS.sopm -d /Users/user/svn/otrs-opennms/otrs/
+Writing /tmp/OpenNMS-0.1.0.opm
+jsartin-mac:~ user$
+
 
 Add the package to otrs
 =======================
 
 1. At the webUI for OTRS, go to Admin->Package Manager.
-2. Add the package (/tmp/otrs-opennms-0.0.1.opm).
+2. Add the package (/tmp/otrs-opennms-0.1.0.opm).
 3. Hit "continue" at the dire warning page.
 
 Add the SOAP user to OTRS
