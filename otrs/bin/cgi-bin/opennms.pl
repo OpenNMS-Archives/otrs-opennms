@@ -1,4 +1,4 @@
-#!/opt/local/bin/perl -w
+#!/usr/bin/perl -w
 # --
 # bin/cgi-bin/opennms.pl - Dispatcher script for OpenNMS Integration module
 # Copyright (C) (Jonathan Sartin) (Jonathan@opennms.org)

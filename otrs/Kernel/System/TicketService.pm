@@ -316,8 +316,8 @@ sub TicketStateUpdate() {
 												UserID => $UserID,
 												State => $TicketStateUpdateReq->{State});
 		$Self->{CommonObject}->{LogObject}->Log(
-				Priority => 'error',
-				Message => "UPDATED STATE");
+				Priority => 'debug',
+				Message => "Updated ticket $TicketStateUpdateReq->{TicketNumber} state to $TicketStateUpdateReq->{State}");
     	} elsif  ( $TicketStateUpdateReq->{StateID} ) {
     		$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketID,
 													UserID => $UserID,
@@ -422,7 +422,7 @@ sub ArticleCreate() {
         	->faultstring("Unable to create Article");
     }
     
-    $Self->{CommonObject}->{LogObject}->Log( Priority => 'error', 
+    $Self->{CommonObject}->{LogObject}->Log( Priority => 'debug', 
 			Message => "Created Article $ArticleID" );
     
     return $ArticleID;
