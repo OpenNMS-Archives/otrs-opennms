@@ -322,9 +322,6 @@ sub TicketStateUpdate() {
     		$Self->{CommonObject}->{TicketObject}->StateSet(TicketID => $TicketID,
 													UserID => $UserID,
 													StateID => $TicketStateUpdateReq->{StateID});
-			$Self->{CommonObject}->{LogObject}->Log(
-				Priority => 'error',
-				Message => "UPDATED STATEID");
     	} else {
     		$Self->{CommonObject}->{LogObject}->Log(
 				Priority => 'error',
