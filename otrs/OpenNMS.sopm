@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
     <Name>OpenNMS</Name>
-    <Version>0.2.0</Version>
+    <Version>1.0.1</Version>
     <Framework>2.2.x</Framework>
     <Framework>2.3.x</Framework>
     <Vendor>The OpenNMS Project</Vendor>
     <URL>http://www.opennms.org/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
-    <ChangeLog Version="0.0.1" Date="2008-05-08 22:20:00">New package.</ChangeLog>
-    <ChangeLog Version="0.1.0" Date="2008-07-29 17:00:00">debug code removed, license updated.</ChangeLog>
+    <ChangeLog Version="1.0.1" Date="2008-11-06 10:00:00">Package Spec Changed and log level adjusted.</ChangeLog>
+    <ChangeLog Version="1.0.0" Date="2008-10-17 17:54:00">Bumped version number for release, updated IntroInstall</ChangeLog>
     <ChangeLog Version="0.2.0" Date="2008-09-29 17:00:00">Reduced logfile noise, changed path to perl</ChangeLog>
-    <Description Lang="en">OpenNMS Integration Module.</Description>
+    <ChangeLog Version="0.1.0" Date="2008-07-29 17:00:00">debug code removed, license updated.</ChangeLog>
+    <ChangeLog Version="0.0.1" Date="2008-05-08 22:20:00">New package.</ChangeLog>
+    <Description Lang="en">
+	OpenNMS Integration Module. This modulesprovides a RPC-Encoded SOAP service to allow the creation and retrival of Tickts and Articles by the OpenNMS Network Management System. Package written and maintained by Jonathan Sartin (jonathan@opennms.org).
+    </Description>
     <IntroInstallPre Title="Ticket interface for OpenNMS" Lang="en">
 	&lt;p&gt;SOAP interface for the &lt;a href="http://www.opennms.org/index.php/OTRS_Integration"&gt;OpenNMS OTRS Trouble Ticket Plugin&lt;/a&gt;.&lt;/p&gt;
-	&lt;p&gt;This Code requires OpenNMS v 1.5.94.&lt;/p&gt;
+	&lt;p&gt;This Code requires OpenNMS v 1.5.94 or later.&lt;/p&gt;
+        &lt;p&gt;You will also need the SOAP::lite and SOAP::DateTime perl modules from CPAN or your distribution.&lt;/p&gt;
     </IntroInstallPre>
     <BuildDate>?</BuildDate>
     <BuildHost>jsartin-mac</BuildHost>
