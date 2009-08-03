@@ -38,6 +38,7 @@ use warnings;
 
 use SOAP::Lite;
 use Kernel::Config;
+use Kernel::System::Encode;
 use Kernel::System::Log;
 use Kernel::System::DB;
 use Kernel::System::PID;
@@ -54,16 +55,17 @@ use vars qw($VERSION);
 $VERSION = qw($Revision: 18 $) [1];
 
 sub new {
-	
-	
+
 	my $Class = shift;
 	my $Self = {};
 	my $som = pop();
-	
+
 	# common objects - create as a hashref
-	
+
 	$Self->{CommonObject} = {};
 	$Self->{CommonObject}->{ConfigObject} = Kernel::Config->new();
+	$Self->{CommonObject}->{EncodeObject} =
+		Kernel::System::Encode->new(%{$Self->{CommonObject}});
 	$Self->{CommonObject}->{LogObject}    = Kernel::System::Log->new(
     	LogPrefix => 'OTRS-SOAP',
     	%{$Self->{CommonObject}},
