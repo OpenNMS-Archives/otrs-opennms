@@ -36,7 +36,7 @@ use strict;
 use warnings;
 
 use Kernel::System::WebService;
-use SOAP::DateTime;
+use Date::Manip;
 use integer;
 use constant URI => "http://opennms.org/integration/otrs/TicketService";
 
@@ -73,8 +73,18 @@ sub TicketGetByID() {
         	->faultstring("No such ticket: $TicketID");
 	}
 	
-	my $Created = ConvertDate( $Ticket{Created} );
-	
+	my $Parsed = ParseDate( $Ticket{Created} );
+	unless($Parsed) {
+               	$Self->{CommonObject}->{LogObject}->Log(
+                        Priority => 'error',
+                        Message => "Could not parse creation date");
+        	die SOAP::Fault
+               		->faultcode('Server.RequestError')
+                	->faultstring("Could not parse creation date");
+        }
+
+  	my $Created =  UnixDate($Parsed,"%Y-%m-%dT%H:%M:%S");
+
 	my @TicketResponse = 
 	(
 		SOAP::Data->name("TicketID" => $Ticket{TicketID})->type("int"),

@@ -4,3 +4,8 @@
 - Now works with OTRS 2.4
 
   Patches gratefully recieved from Martin Edenhofer.
+
+1.1.0 to 1.2.0
+----------------------------------------------------------------------
+- Removed dependency on the hard-to-get SOAP::DateTime. Now calls
+  Date::Manip directly.
